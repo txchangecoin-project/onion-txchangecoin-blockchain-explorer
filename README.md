@@ -1,4 +1,4 @@
-# Onion Monero Blockchain Explorer
+# Onion Txchangecoin Blockchain Explorer
 
 Currently available Monero blockchain explorers have several limitations which are of
 special importance to privacy-oriented users:
