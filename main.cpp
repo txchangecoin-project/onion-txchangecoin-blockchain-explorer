@@ -75,7 +75,6 @@ main(int ac, const char* av[])
     auto enable_json_api_opt           = opts.get_option<bool>("enable-json-api");
     auto enable_as_hex_opt             = opts.get_option<bool>("enable-as-hex");
     auto enable_tx_cache_opt           = opts.get_option<bool>("enable-tx-cache");
-    auto concurrency_opt               = opts.get_option<size_t>("concurrency");
     auto enable_block_cache_opt        = opts.get_option<bool>("enable-block-cache");
     auto show_cache_times_opt          = opts.get_option<bool>("show-cache-times");
     auto enable_emission_monitor_opt   = opts.get_option<bool>("enable-emission-monitor");
@@ -183,9 +182,9 @@ main(int ac, const char* av[])
 
     string deamon_url {*deamon_url_opt};
 
-    if (testnet && deamon_url == "http:://127.0.0.1:18081")
-        deamon_url = "http:://127.0.0.1:28081";
-    if (stagenet && deamon_url == "http:://127.0.0.1:18081")
+    if (testnet && deamon_url == "http:://127.0.0.1:8081")
+        deamon_url = "http:://127.0.0.1:11181";
+    if (stagenet && deamon_url == "http:://127.0.0.1:8081")
         deamon_url = "http:://127.0.0.1:38081";
 
     uint64_t mempool_info_timeout {5000};
@@ -387,7 +386,7 @@ main(int ac, const char* av[])
             || post_body.count("viewkey") == 0
             || post_body.count("tx_hash") == 0)
         {
-            return string("xmr address, viewkey or tx hash not provided");
+            return string("txx address, viewkey or tx hash not provided");
         }
 
         string tx_hash     = remove_bad_chars(post_body["tx_hash"]);
@@ -434,7 +433,7 @@ main(int ac, const char* av[])
                 || post_body.count("txprvkey") == 0
                 || post_body.count("txhash") == 0)
             {
-                return string("xmr address, tx private key or "
+                return string("txx address, tx private key or "
                                       "tx hash not provided");
             }
 
@@ -866,16 +865,9 @@ main(int ac, const char* av[])
     else
     {
         cout << "Staring in non-ssl mode" << endl;
-        if (*concurrency_opt == 0)
-        {
-            app.bindaddr(bindaddr).port(app_port).multithreaded().run();
-        }
-        else
-        {
-            app.bindaddr(bindaddr).port(app_port)
-                .concurrency(*concurrency_opt).run();
-        }
+        app.bindaddr(bindaddr).port(app_port).multithreaded().run();
     }
+
 
     if (enable_emission_monitor == true)
     {
